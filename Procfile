@@ -1,1 +1,1 @@
-web: gunicorn HR_Management:app
+web: python -m gunicorn HR_Management:app
