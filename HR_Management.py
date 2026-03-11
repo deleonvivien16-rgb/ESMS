@@ -1979,6 +1979,8 @@ def index():
 #  ENTRY POINT
 # ══════════════════════════════════════════════════════════════════
 
+init_db()
+
 if __name__ == "__main__":
     init_db()
     threading.Timer(1.0, lambda: webbrowser.open("http://localhost:5000")).start()
