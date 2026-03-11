@@ -209,6 +209,7 @@ def get_db():
     return conn
 
 def init_db():
+    os.makedirs(os.path.dirname(DB), exist_ok=True)
     fresh = not os.path.exists(DB)
     with get_db() as c:
         c.executescript(SCHEMA)
