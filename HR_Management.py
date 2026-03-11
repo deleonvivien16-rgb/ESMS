@@ -210,14 +210,14 @@ def get_db():
 
 def init_db():
     os.makedirs(os.path.dirname(DB), exist_ok=True)
-    fresh = not os.path.exists(DB)
-    print(f"DB path: {DB}")
-    print(f"Fresh database: {fresh}")
     with get_db() as c:
         c.executescript(SCHEMA)
-        if fresh:
+        # Check if departments table is empty, then seed
+        count = c.execute("SELECT COUNT(*) FROM departments").fetchone()[0]
+        if count == 0:
             c.executescript(SEED)
-    print("Database initialized successfully")
+            print("✅ Database seeded with sample data.")
+    print(f"✅ Database ready: {DB}")
     
 # ══════════════════════════════════════════════════════════════════
 #  AUTH ROUTES
