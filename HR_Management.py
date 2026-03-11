@@ -25,7 +25,7 @@ from openpyxl.styles import PatternFill, Font, Alignment
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "change-me-in-production")
-DB  = "sjl_shs.db"
+DB = "/app/data/sjl_shs.db"
 
 ADMIN_EMAIL    = "admin@sjlshs.edu.ph"
 ADMIN_PASSWORD = hashlib.sha256("Admin@1234".encode()).hexdigest()
