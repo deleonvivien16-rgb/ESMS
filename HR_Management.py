@@ -877,8 +877,8 @@ def export_dashboard_pdf():
 
     # KPI cards as a table
     kpi_data = [
-        ['Active Personnel', 'Total Applications', 'Hired Applicants', 'Open Positions'],
-        [str(d['total_staff']), str(d['total_apps']), str(d['hired']), str(d['total_pos'])],
+        ['Active Personnel', 'Open Positions'],
+        [str(d['total_staff']), str(d['total_pos'])],
     ]
     kpi_style = TableStyle([
         ('BACKGROUND',   (0,0), (-1,0),  PDF_NAVY),
@@ -887,9 +887,7 @@ def export_dashboard_pdf():
         ('FONTSIZE',     (0,0), (-1,0),  9),
         ('ALIGN',        (0,0), (-1,-1), 'CENTER'),
         ('BACKGROUND',   (0,1), (0,1),   PDF_LIGHT),
-        ('BACKGROUND',   (1,1), (1,1),   colors.HexColor('#fff7ed')),
-        ('BACKGROUND',   (2,1), (2,1),   colors.HexColor('#f0fdf4')),
-        ('BACKGROUND',   (3,1), (3,1),   colors.HexColor('#fef2f2')),
+        ('BACKGROUND',   (1,1), (1,1),   colors.HexColor('#fef2f2')),
         ('FONTNAME',     (0,1), (-1,1),  'Helvetica-Bold'),
         ('FONTSIZE',     (0,1), (-1,1),  24),
         ('TEXTCOLOR',    (0,1), (-1,1),  PDF_NAVY),
@@ -897,8 +895,8 @@ def export_dashboard_pdf():
         ('TOPPADDING',   (0,0), (-1,-1), 8),
         ('BOTTOMPADDING',(0,0), (-1,-1), 8),
     ])
-    kw = (doc.width / 4)
-    kpi_t = Table(kpi_data, colWidths=[kw]*4)
+    kw = (doc.width / 2)
+    kpi_t = Table(kpi_data, colWidths=[kw]*2)
     kpi_t.setStyle(kpi_style)
     story.append(kpi_t)
     story.append(Spacer(1, 14))
@@ -936,10 +934,10 @@ def export_dashboard_excel():
     # ── Sheet 1: Summary ─────────────────────────────────────────
     ws = wb.active
     ws.title = "Dashboard Summary"
-    _xl_header(ws, "Dashboard", "Dashboard Summary Report", 4)
+    _xl_header(ws, "Dashboard", "Dashboard Summary Report", 2)
 
-    kpi_labels = ['Active Personnel', 'Total Applications', 'Hired', 'Open Positions']
-    kpi_values = [d['total_staff'], d['total_apps'], d['hired'], d['total_pos']]
+    kpi_labels = ['Active Personnel', 'Open Positions']
+    kpi_values = [d['total_staff'], d['total_pos']]
     navy_fill  = PatternFill(start_color='0D1B3E', end_color='0D1B3E', fill_type='solid')
     light_fill = PatternFill(start_color='F0F3FB', end_color='F0F3FB', fill_type='solid')
 
@@ -1019,12 +1017,10 @@ def export_dashboard_pptx():
 
     kpis = [
         (str(d['total_staff']),  "Active Personnel"),
-        (str(d['total_apps']),   "Total Applications"),
-        (str(d['hired']),        "Hired Applicants"),
         (str(d['total_pos']),    "Open Positions"),
     ]
     for i, (num, lbl) in enumerate(kpis):
-        x = Inches(0.3 + i * 3.2); y = Inches(1.5)
+        x = Inches(0.3 + i * 6.4); y = Inches(1.5)
         card = slide2.shapes.add_shape(1, x, y, Inches(2.95), Inches(2.1))
         card.fill.solid(); card.fill.fore_color.rgb = RGBColor(0xff,0xff,0xff)
         card.line.color.rgb = RGBColor(0xd8,0xdf,0xf0)
@@ -1451,8 +1447,6 @@ textarea{resize:vertical;min-height:78px}
     </div>
     <div class="stats-row" id="dash-stats-row">
       <div class="sc"><div class="sc-bar"></div><div class="sc-icon">👥</div><div class="sc-num" id="s-staff">—</div><div class="sc-lbl">Active Personnel</div></div>
-      <div class="sc"><div class="sc-bar"></div><div class="sc-icon">📋</div><div class="sc-num" id="s-apps">—</div><div class="sc-lbl">Total Applications</div></div>
-      <div class="sc"><div class="sc-bar"></div><div class="sc-icon">✅</div><div class="sc-num" id="s-hired">—</div><div class="sc-lbl">Hired</div></div>
       <div class="sc"><div class="sc-bar"></div><div class="sc-icon">💼</div><div class="sc-num" id="s-pos">—</div><div class="sc-lbl">Open Positions</div></div>
     </div>
     <div class="info-grid" id="dash-charts-row">
@@ -1706,8 +1700,6 @@ async function doExport(section, fmt){
 async function loadDashboard(){
   const s=await api('/stats'); if(!s) return;
   document.getElementById('s-staff').textContent=s.total_personnel;
-  document.getElementById('s-apps').textContent=s.total_applications;
-  document.getElementById('s-hired').textContent=s.hired;
   document.getElementById('s-pos').textContent=s.open_positions;
   const ctx=document.getElementById('dept-chart').getContext('2d');
   if(window._deptChart) window._deptChart.destroy();
@@ -1989,4 +1981,4 @@ def index():
 if __name__ == "__main__":
     init_db()
     threading.Timer(1.0, lambda: webbrowser.open("http://localhost:5000")).start()
-    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))  
