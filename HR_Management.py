@@ -211,13 +211,14 @@ def get_db():
 def init_db():
     os.makedirs(os.path.dirname(DB), exist_ok=True)
     fresh = not os.path.exists(DB)
+    print(f"DB path: {DB}")
+    print(f"Fresh database: {fresh}")
     with get_db() as c:
         c.executescript(SCHEMA)
         if fresh:
             c.executescript(SEED)
-            print("✅ Database created with sample data.")
-    print(f"✅ Database ready: {DB}")
-
+    print("Database initialized successfully")
+    
 # ══════════════════════════════════════════════════════════════════
 #  AUTH ROUTES
 # ══════════════════════════════════════════════════════════════════
